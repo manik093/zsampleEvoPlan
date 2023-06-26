@@ -44,7 +44,7 @@
     }
   },
   "sap.ui5": {
-    "flexEnabled": true,
+    "flexEnabled": false,
     "dependencies": {
       "minUI5Version": "1.114.0",
       "libs": {
@@ -86,29 +86,51 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "async": true,
         "viewPath": "com.sample.zcheckplan.view",
         "controlAggregation": "pages",
-        "controlId": "app",
-        "clearControlAggregation": false
+        "controlId": "appPanel",
+        "clearControlAggregation": false,
+        "async": true
       },
       "routes": [
         {
-          "name": "RouteView1",
+          "name": "demands",
           "pattern": ":?query:",
           "target": [
-            "TargetView1"
+            "demands",
+            "resourceTree"
           ]
         }
       ],
       "targets": {
-        "TargetView1": {
-          "viewType": "XML",
-          "transition": "slide",
-          "clearControlAggregation": false,
-          "viewId": "View1",
-          "viewName": "View1"
-        }
+        "splitHorNavigation": {
+					"viewType": "XML",
+					"viewName": "layouts.Split2HorViewsNavi",
+					"viewLevel": 3,
+					"controlId": "appPanel"
+				},
+				"splitVerNavigation": {
+					"viewType": "XML",
+					"viewName": "layouts.Split2VerViewsNavi",
+					"viewLevel": 2,
+					"controlId": "appPanel"
+				},
+        "resourceTree": {
+					"viewType": "XML",
+					"viewName": "ResourceTree",
+					"viewPath": "com.sample.zcheckplan.view.demands",
+					"viewLevel": 3,
+					"controlId": "leftPanel",
+					"parent": "splitHorNavigation"
+				},
+				"demands": {
+					"viewType": "XML",
+					"viewName": "Demands",
+					"viewPath": "com.sample.zcheckplan.view.demands",
+					"viewLevel": 3,
+					"controlId": "rightPanel",
+					"parent": "splitHorNavigation"
+				}
       }
     },
     "rootView": {

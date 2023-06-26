@@ -1,0 +1,7 @@
+<mvc:View 
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m">
+    <Page id="ResourceTree" title="ResourceTree - {i18n>title}">
+        <content />
+    </Page>
+</mvc:View>
