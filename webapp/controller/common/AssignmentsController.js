@@ -1,5 +1,5 @@
 sap.ui.define([
-	"sap/ui/core/mvc/Controller"
+	"com/sample/zcheckplan/controller/BaseController"
  ], function (Controller) {
 	"use strict";
 	return Controller.extend("com.sample.zcheckplan.controller.BaseController", {

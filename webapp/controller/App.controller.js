@@ -1,14 +1,15 @@
 sap.ui.define(
   [
-    "com/sample/zcheckplan/controller/BaseController",
+    "com/sample/zcheckplan/controller/common/AssignmentsController",
     "sap/ui/model/json/JSONModel",
     "com/sample/zcheckplan/model/formatter",
+	"com/sample/zcheckplan/model/Constants"
   ],
-  function (Controller, JSONModel, formatter) {
+  function (Controller, JSONModel, formatter,Constants) {
     "use strict";
 
     return Controller.extend("com.sample.zcheckplan.controller.App", {
-
+      formatter: formatter,
       onInit: function () {
         
 
