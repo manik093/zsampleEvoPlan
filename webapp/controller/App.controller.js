@@ -11,7 +11,7 @@ sap.ui.define(
     return Controller.extend("com.sample.zcheckplan.controller.App", {
       formatter: formatter,
       onInit: function () {
-        
+        this._eventBus = sap.ui.getCore().getEventBus();
 
         var oViewModel,
           fnSetAppNotBusy,
