@@ -39,7 +39,7 @@ sap.ui.define(
         this._SampleMethod();
 
         //set init page title
-        //oRouter.attachRouteMatched(this._onAllRouteMatched, this);
+        oRouter.attachRouteMatched(this._onAllRouteMatched, this);
       },
       _onAllRouteMatched: function (oEvent) {
         var oAppViewModel = this.getOwnerComponent().getModel("appView"),
