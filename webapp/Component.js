@@ -3,11 +3,23 @@
  */
 
 sap.ui.define([
-        "sap/ui/core/UIComponent",
-        "sap/ui/Device",
-        "com/sample/zcheckplan/model/models"
-    ],
-    function (UIComponent, Device, models) {
+    "sap/ui/core/UIComponent",
+    "sap/ui/Device",
+    "sap/ui/model/json/JSONModel",
+    "com/sample/zcheckplan/model/models",
+    "com/sample/zcheckplan/model/Constants",
+    "sap/m/MessagePopover",
+    "sap/m/MessagePopoverItem",
+    "sap/m/Link",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+    "com/sample/zcheckplan/controller/ErrorHandler",
+],
+    function (UIComponent, Device, JSONModel, models, Constants, MessagePopover,
+        MessagePopoverItem,
+        Link,
+        Filter,
+        FilterOperator,ErrorHandler) {
         "use strict";
 
         return UIComponent.extend("com.sample.zcheckplan.Component", {
@@ -21,15 +33,195 @@ sap.ui.define([
              * @override
              */
             init: function () {
+                // initialize the error handler with the component
+			this._oErrorHandler = new ErrorHandler(this);
                 // call the base component's init function
                 UIComponent.prototype.init.apply(this, arguments);
-
-                // enable routing
-                this.getRouter().initialize();
+                if (sap.ushell && sap.ushell.Container) {
+                    this.getModel("viewModel").setProperty("/launchMode", Constants.LAUNCH_MODE.FIORI);
+                }
 
                 // set the device model
                 this.setModel(models.createDeviceModel(), "device");
-            }
+
+                //Initializing all the global models
+                this._createDataModels();
+
+                //Message Popover Initialzation
+                this._createMessagePopover();
+
+               
+
+                // ToDo Authorizations.
+                this.getRouter().initialize();
+
+            },
+            _createDataModels: function () {
+                this.setModel(models.createDeviceModel(), "device");
+                var oViewModel = new JSONModel({
+                    subFilterEntity: "Demand",
+                    tableBusyDelay: 0,
+                    counterResourceFilter: "",
+                    showStatusChangeButton: false,
+                    busy: true,
+                    delay: 0,
+                    assetStartDate: new Date(),
+                    dragSession: null, // Drag session added as we are keeping dragged data in the model.
+                    gantDragSession: null, // Drag session from Gantt View added as we are keeping dragged data in the model.
+                    detailPageBreadCrum: "",
+                    capacityPlanning: false,
+                    remainingWork: false,
+                    dragDropSetting: {
+                        isReassign: false
+                    },
+                    splitterDivider: "30%",
+                    ganttSelectionPane: "28%",
+                    showUtilization: false,
+                    selectedHierarchyView: "TIMENONE",
+                    enableReprocess: false,
+                    launchMode: Constants.LAUNCH_MODE.BSP,
+                    DefaultDemandStatus: "",
+                    ganttSettings: {
+                        active: false,
+                        shapeOperation: {
+                            unassign: false,
+                            reassign: false,
+                            change: false
+                        },
+                        aGanttSplitDemandData: false,
+                        GanttPopOverData: {}
+                    },
+                    showDemands: true,
+                    mapSettings: {
+                        busy: false,
+                        filters: [],
+                        selectedDemands: [],
+                        routeData: [],
+                        checkedDemands: [],
+                        assignedDemands: [],
+                        bRouteDateSelected: false,
+                        aAssignedAsignmentsForPlanning: [],
+                        droppedResources: [],
+                        bIsSignlePlnAsgnSaved: false,
+                        DemandSet: []
+                    },
+                    resourceTreeShowRouteColumn: false,
+                    resourceFilterforRightTechnician: false,
+                    CheckRightTechnician: false,
+                    WarningMsgResourceTree: false,
+                    resourceQualification: {
+                        AssignBtnVisible: false,
+                        AssignBtnEnable: false,
+                        FindResourceBtnVisible: false,
+                        FindResourceBtnEnable: false
+                    },
+                    manageResourcesSettings: {
+                        selectedRow: false,
+                        operationType: "",
+                        Assignments: {},
+                        removedIndices: [],
+                        draggedItemContext: []
+                    },
+                    densityClass: this.getContentDensityClass(),
+                    isOpetationLongTextPressed: false,
+                    oResponseMessages: [],
+                    aFixedAppointmentsList: {},
+                    bDemandEditMode: false,
+                    ganttResourceFiltersFromPin: [],
+                    ganttDateRangeFromMap: [],
+                    iFirstVisibleRowIndex: -1,
+                    availabilities: {
+                        data: [],
+                        isToAssign: false
+                    },
+                    timeAllocations: {
+                        countAll: 0,
+                        countBlockers: 0,
+                        countAbsences: 0,
+                        enableTabs: true,
+                        createData: [],
+                        createDataCopy: [],
+                        StartDate: "",
+                        EndDate: ""
+                    },
+                    validateIW31Auth: true,
+                    validateIW32Auth: true,
+                    aFilterBtntextGanttDemandTbl: this.getModel("i18n").getResourceBundle().getText("xbut.filters"),
+                    bFilterGantBtnDemandtsGantt: false,
+                    PRT: {
+                        btnSelectedKey: "demands",
+                        bIsGantt: false,
+                        defaultStartDate: "",
+                        defaultEndDate: ""
+                    },
+                    Scheduling: {
+                        sType: "",
+                        sScheduleDialogTitle: "",
+                        bEnableReschedule: false,
+                        SchedulingDialogFlags: {
+
+                        }
+                    }
+                });
+                oViewModel.setSizeLimit(999999999);
+                this.setModel(oViewModel, "viewModel");
+
+                //Creating the Global message model from MessageManager
+                var oMessageModel = new JSONModel();
+                oMessageModel.setData([]);
+                this.setModel(oMessageModel, "MessageModel");
+                 // enable routing
+                 
+            },
+            /**
+         * Function to initialize Message Popover
+         */
+            _createMessagePopover: function () {
+                // Message popover link
+                var oLink = new Link({
+                    text: "{i18n>xtit.showMoreInfo}",
+                    href: "",
+                    target: "_blank"
+                });
+
+                // Message popover template
+                var oMessageTemplate = new MessagePopoverItem({
+                    type: "{MessageModel>type}",
+                    title: "{MessageModel>title}",
+                    description: "{MessageModel>description}",
+                    subtitle: "{MessageModel>subtitle}",
+                    counter: "{MessageModel>counter}",
+                    link: oLink
+                });
+
+                //Message Popover
+                var oMessagePopover = new MessagePopover({
+                    items: {
+                        path: "MessageModel>/",
+                        template: oMessageTemplate
+                    }
+                });
+                this._oMessagePopover = oMessagePopover;
+            },
+            getContentDensityClass: function () {
+                if (this._sContentDensityClass === undefined) {
+                    // check whether FLP has already set the content density class; do nothing in this case
+                    var element = document.getElementsByTagName("body")[0];
+                    if (element.classList.contains("sapUiSizeCozy") || element.classList.contains("sapUiSizeCompact")) {
+                        this._sContentDensityClass = "";
+                    } else if (Device.system.desktop && Device.support.touch) { // apply "compact" mode if touch is not supported
+                        // "cozy" in case of touch support; default for most sap.m controls, but needed for desktop-first controls like sap.ui.table.Table
+                        this._sContentDensityClass = "sapUiSizeCompact";
+                    } else if (Device.support.touch) { // apply "compact" mode if touch is not supported
+                        // "cozy" in case of touch support; default for most sap.m controls, but needed for desktop-first controls like sap.ui.table.Table
+                        this._sContentDensityClass = "sapUiSizeCozy";
+                    } else {
+                        //sapUiSizeCompact
+                        this._sContentDensityClass = "sapUiSizeCompact";
+                    }
+                }
+                return this._sContentDensityClass;
+            },
         });
     }
 );
