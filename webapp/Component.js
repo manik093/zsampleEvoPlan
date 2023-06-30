@@ -165,12 +165,21 @@ sap.ui.define([
                 });
                 oViewModel.setSizeLimit(999999999);
                 this.setModel(oViewModel, "viewModel");
+                // user model
+                this.setModel(models.createUserModel({
+                    ENABLE_ASSET_PLANNING: false,
+                    ENABLE_EVOORDERRELATE_BUTTON: false,
+                    ENABLE_EVORESOURCE_BUTTON: false,
+                    ENABLE_IW32_AUTH_CHECK: false,
+                    ENABLE_IW31_AUTH_CHECK: false,
+                    ENABLE_PM_AUTH_CHECK: false
+                }), "user");
 
                 //Creating the Global message model from MessageManager
                 var oMessageModel = new JSONModel();
                 oMessageModel.setData([]);
                 this.setModel(oMessageModel, "MessageModel");
-                 // enable routing
+               
                  
             },
             /**
