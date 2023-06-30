@@ -9,7 +9,7 @@
 					<l:VerticalLayout id="resourceTreeFilterBarFragment" width="100%"></l:VerticalLayout>
                     <FlexBox id="idResToolbar" alignItems="Start" justifyContent="SpaceBetween">
 						<items>
-							
+							<core:Fragment fragmentName="com.sample.zcheckplan.view.common.fragments.TreeExpandCollapse" type="XML"/>
 							<core:ExtensionPoint name="PageExtP|ResourceTree|ResourceHierarchySet|Header|Actions|Left"/>
 							<HBox visible="{user>/ENABLE_QUALIFICATION}">
 								<Switch id="idCheckRightTechnician" customTextOn="{i18n>xlab.switchOn}" customTextOff="{i18n>xlab.switchOff}"
@@ -39,9 +39,9 @@
 		</f:header>
 		<f:footer>
 			<OverflowToolbar id="idResourceTreeFooterToolbar">
-			
+                <core:Fragment fragmentName="com.sample.zcheckplan.view.common.fragments.ResourceActions" type="XML"/>
 				<ToolbarSpacer/>
-				
+				<core:Fragment fragmentName="com.sample.zcheckplan.view.common.fragments.ResourcePlanningCalender" type="XML"/>
 			</OverflowToolbar>
 		</f:footer>
 		
