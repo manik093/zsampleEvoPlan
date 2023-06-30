@@ -1,7 +1,49 @@
-<mvc:View 
-    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
-    xmlns="sap.m">
-    <Page id="ResourceTree" title="ResourceTree - {i18n>title}">
-        <content />
-    </Page>
+<mvc:View controllerName="com.sample.zcheckplan.controller.demands.ResourceTree" xmlns:core="sap.ui.core" xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:f="sap.f" xmlns:table="sap.ui.table" xmlns:smartTable="sap.ui.comp.smarttable"
+	 xmlns:l="sap.ui.layout" xmlns:dnd="sap.ui.core.dnd" displayBlock="true" height="100%">
+	<f:DynamicPage id="idResourcePage" headerExpanded="true" preserveHeaderStateOnScroll="true" fitContent="true" showFooter="true"
+		class="sapUiNoContentPadding tableContentPage" toggleHeaderOnTitleClick="false">
+		<f:header>
+			<f:DynamicPageHeader id="resourceTreePageHeader" pinnable="true">
+				<f:content>
+					<l:VerticalLayout id="resourceTreeFilterBarFragment" width="100%"></l:VerticalLayout>
+                    <FlexBox id="idResToolbar" alignItems="Start" justifyContent="SpaceBetween">
+						<items>
+							
+							<core:ExtensionPoint name="PageExtP|ResourceTree|ResourceHierarchySet|Header|Actions|Left"/>
+							<HBox visible="{user>/ENABLE_QUALIFICATION}">
+								<Switch id="idCheckRightTechnician" customTextOn="{i18n>xlab.switchOn}" customTextOff="{i18n>xlab.switchOff}"
+									state="{viewModel>/CheckRightTechnician}" change="onClickEnableFindTechnician"></Switch>
+								<Text text="{i18n>xlab.qualification}" class="sapUiTinyMarginBegin sapUiTinyMarginTop"></Text>
+							</HBox>
+							<core:ExtensionPoint name="PageExtP|ResourceTree|ResourceHierarchySet|Header|Actions|Mid"/>
+							<VBox>
+								<HBox visible="{user>/ENABLE_CAPACITY}" >
+									<Switch id="idCapaCheck" customTextOn="{i18n>xlab.switchOn}" customTextOff="{i18n>xlab.switchOff}"
+										state="{viewModel>/capacityPlanning}" change="onSelectCapacity" enabled="{= ${viewModel>/selectedHierarchyView} !== 'TIMENONE'? true : false }"></Switch>
+									<Text text="{i18n>xtit.capacity}" class="sapUiTinyMarginBegin sapUiTinyMarginTop"></Text>
+								</HBox>
+								<HBox visible="{ parts:[{path:'user>/ENABLE_CAPACITY'},{path:'user>/ENABLE_REMAINING_WORK'},{path:'viewModel>/capacityPlanning'},{path:'viewModel>/selectedHierarchyView'}], formatter: '.formatter.formatRemainingWorkVisibility'}" >
+									<Switch id="idRemWorkCheck" customTextOn="{i18n>xlab.switchOn}" customTextOff="{i18n>xlab.switchOff}"
+									state="{viewModel>/remainingWork}" change="onSelectRemainingWork"></Switch>
+									<Text text="{path:'user>/ENABLE_REMAINING_WORK_LABEL', formatter: '.formatter.RemainingWorkLabel'}" class="sapUiTinyMarginBegin sapUiTinyMarginTop"></Text>
+								</HBox>
+							</VBox>
+							<core:ExtensionPoint name="PageExtP|ResourceTree|ResourceHierarchySet|Header|Actions|Right"/>
+						</items>
+					</FlexBox>
+					<MessageStrip class="custMsgStrip" text="{i18n>xmsg.resourceTreeRefresh}" type="Warning" showIcon="true" showCloseButton="true"
+						visible="{viewModel>/WarningMsgResourceTree}"/>
+				</f:content>
+			</f:DynamicPageHeader>
+		</f:header>
+		<f:footer>
+			<OverflowToolbar id="idResourceTreeFooterToolbar">
+			
+				<ToolbarSpacer/>
+				
+			</OverflowToolbar>
+		</f:footer>
+		
+	</f:DynamicPage>
 </mvc:View>
