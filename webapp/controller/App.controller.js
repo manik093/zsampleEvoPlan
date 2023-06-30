@@ -36,8 +36,6 @@ sap.ui.define(
         // apply content density mode to root view
         this._oAppControl = this.byId("approvalApp");
         this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
-        this._SampleMethod();
-
         //set init page title
         oRouter.attachRouteMatched(this._onAllRouteMatched, this);
       },

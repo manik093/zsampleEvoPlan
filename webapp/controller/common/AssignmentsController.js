@@ -7,7 +7,7 @@ sap.ui.define([
 			// init wont run here as this controlle doesnt have bounded view.
 		},
 		_SampleMethod:function(){
-			
+			console.log("sample, assignments controller");
 		}
 	});
  });
