@@ -4,10 +4,10 @@ sap.ui.define([
 	"use strict";
 	return Controller.extend("com.sample.zcheckplan.controller.BaseController", {
 		onInit:function(){
-			console.log("manik");
+			// init wont run here as this controlle doesnt have bounded view.
 		},
 		_SampleMethod:function(){
-			console.log(this);
+			
 		}
 	});
  });

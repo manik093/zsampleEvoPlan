@@ -19,7 +19,7 @@ sap.ui.define([
         MessagePopoverItem,
         Link,
         Filter,
-        FilterOperator,ErrorHandler) {
+        FilterOperator, ErrorHandler) {
         "use strict";
 
         return UIComponent.extend("com.sample.zcheckplan.Component", {
@@ -34,7 +34,7 @@ sap.ui.define([
              */
             init: function () {
                 // initialize the error handler with the component
-			this._oErrorHandler = new ErrorHandler(this);
+                this._oErrorHandler = new ErrorHandler(this);
                 // call the base component's init function
                 UIComponent.prototype.init.apply(this, arguments);
                 if (sap.ushell && sap.ushell.Container) {
@@ -50,9 +50,9 @@ sap.ui.define([
                 //Message Popover Initialzation
                 this._createMessagePopover();
 
-               
+                //Initial Batch Calls
+                this._prepareInitialData();
 
-                // ToDo Authorizations.
                 this.getRouter().initialize();
 
             },
@@ -179,9 +179,41 @@ sap.ui.define([
                 var oMessageModel = new JSONModel();
                 oMessageModel.setData([]);
                 this.setModel(oMessageModel, "MessageModel");
-               
-                 
+
+
             },
+            _prepareInitialData: function () {
+                var aPromises = [];
+                aPromises.push(this._getSystemInformation());
+                Promise.all(aPromises).then(function (data) {
+                    console.log(data);
+                    this.getModel("user").setData(data[0]);
+    
+                    //Intialize variables for SAP authorization
+                    //this._handleAuthorization();
+    
+                    // create the views based on the url/hash
+                   
+                }.bind(this));
+            },
+            /**
+         * Calls the GetSystemInformation 
+         */
+            _getSystemInformation: function () {
+                return new Promise(function (resolve, reject) {
+                    this.getModel().callFunction("/GetSystemInformation", {
+                        method: "GET",
+                        success: function (oData, oResponse) {
+                            resolve(oData);
+                        },
+                        error: function (oError) {
+                            //Handle Error
+                            reject(oError);
+                        }
+                    });
+                }.bind(this));
+            },
+
             /**
          * Function to initialize Message Popover
          */

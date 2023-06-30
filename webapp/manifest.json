@@ -17,7 +17,7 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/sap/opu/odata/evora/EPP_MAIN_SRV/",
+        "uri": "/sap/opu/odata/EVORA/EP_MAIN_SRV/",
         "type": "OData",
         "settings": {
           "annotations": [],
@@ -82,7 +82,9 @@
       "": {
         "dataSource": "mainService",
         "preload": true,
-        "settings": {}
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
       }
     },
     "resources": {
